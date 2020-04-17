@@ -13,14 +13,24 @@ import layout.SudukoBoardView
 
 class MainActivity : AppCompatActivity(),SudukoBoardView.OnTouchListener {
     private  lateinit var viewModel:PlaySudukoViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        SudukoBoardView.registerListener(this)
         val factory: ViewModelProvider.Factory = ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         viewModel = ViewModelProvider(this,factory).get(PlaySudukoViewModel::class.java)
         viewModel.sudukoGame.selectedCellLiveData.observe(this, Observer { updateSelectedCellUI(it) })
         viewModel.sudukoGame.cellsLiveData.observe(this, Observer { updateCells(it) })
-        SudukoBoardView.registerListener(this)
+        val buttons = listOf(oneButton,twoButton,threeButton,fourButton,fiveButton,
+            sixButton,sevenButton,eightButton,nineButton)
+        buttons.forEachIndexed{ index, button ->
+            button.setOnClickListener { viewModel.sudukoGame.handleInput(index + 1) }
+        }
+
+
+        Solve.setOnClickListener{viewModel.sudukoGame.handleSolve()}
+        Delete.setOnClickListener{viewModel.sudukoGame.handleDelete()}
     }
 
     private  fun updateCells(cells:List<List<Cell>>?)=cells?.let {

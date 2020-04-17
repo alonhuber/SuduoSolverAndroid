@@ -24,6 +24,16 @@ class SudukoGame {
         cellsLiveData.postValue(board.cells)
     }
 
+    fun handleSolve(){
+
+    }
+
+    fun handleDelete(){
+        if(selectedRow==-1||selectedColumn==-1)return
+        board.getCell(selectedRow,selectedColumn).value=0
+        cellsLiveData.postValue(board.cells)
+    }
+
     fun updateSelectedCell(row: Int,col:Int){
         selectedRow=row
         selectedColumn=col

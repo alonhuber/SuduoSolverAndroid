@@ -38,7 +38,7 @@ class SudukoBoardView(context: Context,attributeSet: AttributeSet) :View(context
     private val textPaint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.BLACK
-        textSize=24f
+        textSize=45f
     }
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -132,7 +132,9 @@ class SudukoBoardView(context: Context,attributeSet: AttributeSet) :View(context
     }
 
     fun registerListener(listener: SudukoBoardView.OnTouchListener){
-        this.listener= this.listener
+        this.listener= listener
+
+        val int:Int=1
     }
 
     interface OnTouchListener{
