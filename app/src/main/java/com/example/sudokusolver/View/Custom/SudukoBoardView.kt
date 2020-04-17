@@ -1,13 +1,12 @@
 package layout
-import android.app.Notification
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import com.example.sudokusolver.Game.Cell
 //import com.patrickfeltes.sudokuyoutube.game.Cell
-import kotlin.math.min
+
 class SudukoBoardView(context: Context,attributeSet: AttributeSet) :View(context,attributeSet)
 {
     private var sqrtSize=3
@@ -15,8 +14,8 @@ class SudukoBoardView(context: Context,attributeSet: AttributeSet) :View(context
     private var cellSizePixel =0F
     private var selectedRow=-1
     private var selectedColumn=-1
-
-    private  var listner: SudukoBoardView.OnTouchListener?=null
+    private var cells :List<List<Cell>>?=null
+    private  var listener: SudukoBoardView.OnTouchListener?=null
 
     private val thickLinePaint = Paint().apply {
         style = Paint.Style.STROKE
@@ -32,10 +31,14 @@ class SudukoBoardView(context: Context,attributeSet: AttributeSet) :View(context
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#6ead3a")
     }
-
     private val conflictingCellPaint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.parseColor("#efedef")
+    }
+    private val textPaint = Paint().apply {
+        style = Paint.Style.FILL_AND_STROKE
+        color = Color.BLACK
+        textSize=24f
     }
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -47,12 +50,14 @@ class SudukoBoardView(context: Context,attributeSet: AttributeSet) :View(context
         cellSizePixel=(width/size).toFloat()
         fillCells(canvas)
         drawLines(canvas)
+        drawText(canvas)
     }
 
     private fun fillCells(canvas: Canvas){
-        if(selectedRow==-1||selectedColumn==-1)return
-        for (r in 0..size){
-            for (c in 0 until  size){
+        cells?.forEach{ it ->
+            it?.forEach{cell->
+                val c=cell.colmun
+                val r=cell.row
                 if (r == selectedRow && c == selectedColumn) {
                     fillCell(canvas, r, c, selectedCellPaint)
                 } else if (r == selectedRow || c == selectedColumn) {
@@ -81,6 +86,23 @@ class SudukoBoardView(context: Context,attributeSet: AttributeSet) :View(context
         }
     }
 
+    private fun drawText(canvas: Canvas){
+        cells?.forEach{ it ->
+            it?.forEach{cell->
+                val c=cell.colmun
+                val r=cell.row
+                val value=cell.value.toString()
+                val textBound= Rect()
+                textPaint.getTextBounds(value,0,value.length,textBound)
+                val textWidth=textPaint.measureText(value)
+                val textHeight= textBound.height()
+                canvas.drawText(value,(c*cellSizePixel)+cellSizePixel/2-textWidth/2,
+                    r*cellSizePixel+cellSizePixel/2-textHeight/2,textPaint)
+
+            }
+        }
+    }
+
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         return when(event?.action){
             MotionEvent.ACTION_DOWN->{
@@ -92,19 +114,25 @@ class SudukoBoardView(context: Context,attributeSet: AttributeSet) :View(context
         }
     }
 
-    private  fun handleTouchEvent(x: Float ,y: Float){
+    private fun handleTouchEvent(x: Float ,y: Float){
         val possibleSelectedRow=(y/cellSizePixel).toInt()
         val possibleSelectedColumn=(x/cellSizePixel).toInt()
-        listner?.onTouched(possibleSelectedRow,possibleSelectedColumn)
+        listener?.onTouched(possibleSelectedRow,possibleSelectedColumn)
+    }
+
+    fun updateCell(cells:List<List<Cell>>){
+        this.cells=cells
+        invalidate()
     }
 
      fun updateSelectedCellUI(row:Int,col:Int){
         selectedRow=row
         selectedColumn=col
+        invalidate()
     }
 
     fun registerListener(listener: SudukoBoardView.OnTouchListener){
-        this.listner=listner
+        this.listener= this.listener
     }
 
     interface OnTouchListener{

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.sudokusolver.Game.Cell
 import com.example.sudokusolver.R
 import com.example.sudokusolver.ViewModel.PlaySudukoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,10 +16,15 @@ class MainActivity : AppCompatActivity(),SudukoBoardView.OnTouchListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        SudukoBoardView.registerListener(this)
         val factory: ViewModelProvider.Factory = ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         viewModel = ViewModelProvider(this,factory).get(PlaySudukoViewModel::class.java)
         viewModel.sudukoGame.selectedCellLiveData.observe(this, Observer { updateSelectedCellUI(it) })
+        viewModel.sudukoGame.cellsLiveData.observe(this, Observer { updateCells(it) })
+        SudukoBoardView.registerListener(this)
+    }
+
+    private  fun updateCells(cells:List<List<Cell>>?)=cells?.let {
+        SudukoBoardView.updateCell(cells)
     }
 
     private fun updateSelectedCellUI(cell:Pair<Int,Int>?)=cell?.let{
