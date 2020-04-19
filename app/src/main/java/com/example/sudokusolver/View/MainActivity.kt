@@ -1,6 +1,8 @@
 package com.example.sudokusolver.View
 
+import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -24,13 +26,12 @@ class MainActivity : AppCompatActivity(),SudukoBoardView.OnTouchListener {
         viewModel = ViewModelProvider(this,factory).get(PlaySudukoViewModel::class.java)
         viewModel.sudukoGame.selectedCellLiveData.observe(this, Observer { updateSelectedCellUI(it) })
         viewModel.sudukoGame.cellsLiveData.observe(this, Observer { updateCells(it) })
+        viewModel.sudukoGame.solveSucceessLiveData.observe(this, Observer { updateSolveSuccess(it) })
         val buttons = listOf(oneButton,twoButton,threeButton,fourButton,fiveButton,
             sixButton,sevenButton,eightButton,nineButton)
         buttons.forEachIndexed{ index, button ->
             button.setOnClickListener { viewModel.sudukoGame.handleInput(index + 1) }
         }
-
-
         Solve.setOnClickListener{viewModel.sudukoGame.handleSolve()}
         Delete.setOnClickListener{viewModel.sudukoGame.handleDelete()}
         Reset.setOnClickListener{viewModel.sudukoGame.reset()}
@@ -43,7 +44,17 @@ class MainActivity : AppCompatActivity(),SudukoBoardView.OnTouchListener {
     private fun updateSelectedCellUI(cell:Pair<Int,Int>?)=cell?.let{
         SudukoBoardView.updateSelectedCellUI(cell.first,cell.second)
     }
-
+    private fun updateSolveSuccess(isSuccess:Boolean)=isSuccess?.let {
+        val builder=AlertDialog.Builder(this)
+        builder.setTitle("Solver finish")
+        if(isSuccess){
+            builder.setMessage("Succeed")
+        }else{
+            builder.setMessage("Failed")
+        }
+        builder.setPositiveButton("Close") { dialogInterface:DialogInterface, i:Int-> }
+        builder.show()
+    }
     override fun onTouched(row:Int,col:Int){
         viewModel.sudukoGame.updateSelectedCell(row,col)
     }

@@ -62,7 +62,9 @@ class Solver() {
         var missingNumbers:Int=0
         board.cells.forEach{
             it.forEach{
-                if(it.isHasValue()){missingNumbers++}
+                if(!it.isHasValue()){
+                    missingNumbers++
+                }
             }
         }
         val status: Status

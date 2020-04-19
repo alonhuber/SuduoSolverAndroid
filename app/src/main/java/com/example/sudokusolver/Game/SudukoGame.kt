@@ -37,7 +37,7 @@ class SudukoGame {
         val(b,s)=solver.solveSudoku(board)
         board=b
         cellsLiveData.postValue(board.cells)
-        //solveSucceessLiveData.postValue(s)
+        solveSucceessLiveData.postValue(s)
     }
 
     fun handleDelete(){
