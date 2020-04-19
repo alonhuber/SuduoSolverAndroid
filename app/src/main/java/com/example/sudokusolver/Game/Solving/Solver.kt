@@ -15,8 +15,7 @@ class Solver() {
 
         while (true)
         {
-            val status: Status = getSolvingStatus(board);
-            when(status){
+            when(getSolvingStatus(board)){
                 Status.Succeeded->return Pair(board,true)
                 Status.Stuck->return Pair(board,false)
 
