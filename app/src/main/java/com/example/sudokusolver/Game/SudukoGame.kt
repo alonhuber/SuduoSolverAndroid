@@ -6,17 +6,23 @@ import com.example.sudokusolver.Game.Solving.Solver
 class SudukoGame {
     var selectedCellLiveData = MutableLiveData<Pair<Int,Int>>()
     var cellsLiveData =MutableLiveData<List<List<Cell>>>()
+    var solveSucceessLiveData =MutableLiveData<Boolean>()
 
     private var selectedRow=-1
     private var selectedColumn=-1
 
-    private var board:Board
+    private lateinit var board:Board
     init{
+        reset()
+    }
+
+    fun reset(){
         val cells= List(9 ) { i->List(9) { j-> Cell(i, j, 0) }}
         board= Board(9,cells)
         selectedCellLiveData.postValue(Pair(selectedRow,selectedColumn))
         cellsLiveData.postValue(cells)
     }
+
 
     fun handleInput(number:Int){
         if(selectedRow==-1||selectedColumn==-1)return
@@ -26,17 +32,12 @@ class SudukoGame {
     }
 
     fun handleSolve(){
+        board.resetValidNumber()
         val solver:Solver= Solver()
         val(b,s)=solver.solveSudoku(board)
         board=b
         cellsLiveData.postValue(board.cells)
-        if(s){
-            //postValue success
-            //cellsLiveData.postValue(board.cells)
-        }else{
-            //postValue failure
-        }
-
+        solveSucceessLiveData.postValue(s)
     }
 
     fun handleDelete(){

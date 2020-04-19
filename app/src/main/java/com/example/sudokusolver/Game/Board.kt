@@ -15,6 +15,14 @@ class Board(val size:Int,var cells:List<List<Cell>>) {
         areaList[row/3][col/3][row/3+col%3].value=value
     }
 
+    fun resetValidNumber(){
+        cells.forEach{
+            it.forEach{
+                it.resetValidNumber()
+            }
+        }
+    }
+
     fun setCachedLists(){
         upsideList= List(9 ) { i->List(9) { j-> Cell(j,i, getCell(j,i).value) }}
         areaList =List(3 ) { i->List(3) { j->List(9){

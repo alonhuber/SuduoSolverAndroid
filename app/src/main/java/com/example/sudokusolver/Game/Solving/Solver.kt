@@ -15,8 +15,7 @@ class Solver() {
 
         while (true)
         {
-            val status: Status = getSolvingStatus(board);
-            when(status){
+            when(getSolvingStatus(board)){
                 Status.Succeeded->return Pair(board,true)
                 Status.Stuck->return Pair(board,false)
 
@@ -62,7 +61,9 @@ class Solver() {
         var missingNumbers:Int=0
         board.cells.forEach{
             it.forEach{
-                if(it.isHasValue()){missingNumbers++}
+                if(!it.isHasValue()){
+                    missingNumbers++
+                }
             }
         }
         val status: Status

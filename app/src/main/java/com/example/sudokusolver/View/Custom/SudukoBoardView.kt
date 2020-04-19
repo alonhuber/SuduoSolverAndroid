@@ -38,7 +38,7 @@ class SudukoBoardView(context: Context,attributeSet: AttributeSet) :View(context
     private val textPaint = Paint().apply {
         style = Paint.Style.FILL_AND_STROKE
         color = Color.BLACK
-        textSize=45f
+        textSize=50f
     }
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -97,7 +97,7 @@ class SudukoBoardView(context: Context,attributeSet: AttributeSet) :View(context
                 val textWidth=textPaint.measureText(value)
                 val textHeight= textBound.height()
                 canvas.drawText(value,(c*cellSizePixel)+cellSizePixel/2-textWidth/2,
-                    r*cellSizePixel+cellSizePixel/2-textHeight/2,textPaint)
+                    r*cellSizePixel+cellSizePixel/1.5f-textHeight/2,textPaint)
 
             }
         }
