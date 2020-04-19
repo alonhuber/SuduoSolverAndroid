@@ -1,5 +1,6 @@
 package com.example.sudokusolver.View
 
+import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,7 @@ import com.example.sudokusolver.Game.Cell
 import com.example.sudokusolver.R
 import com.example.sudokusolver.ViewModel.PlaySudukoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 import layout.SudukoBoardView
 
 class MainActivity : AppCompatActivity(),SudukoBoardView.OnTouchListener {
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity(),SudukoBoardView.OnTouchListener {
 
         Solve.setOnClickListener{viewModel.sudukoGame.handleSolve()}
         Delete.setOnClickListener{viewModel.sudukoGame.handleDelete()}
+        Reset.setOnClickListener{viewModel.sudukoGame.reset()}
     }
 
     private  fun updateCells(cells:List<List<Cell>>?)=cells?.let {

@@ -12,4 +12,7 @@ class Cell(val row:Int,val colmun:Int,var value:Int) {
             }
         }
     }
+    fun resetValidNumber(){
+        validNumbers = (1..9).toMutableList()
+    }
 }
